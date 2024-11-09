@@ -1,27 +1,15 @@
 package main
 
 import (
-	"log"
-	"os"
-
-	"github.com/gofiber/fiber/v2"
+	"fmt"
+	"net/http"
 )
 
+func helloWoldPage(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "It works 3/5 golang")
+}
+
 func main() {
-	app := fiber.New()
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
-	app.Get("/env", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, ENV! " + os.Getenv("TEST_ENV"))
-	})
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
-
-	log.Fatal(app.Listen("0.0.0.0:" + port))
+	http.HandleFunc("/", helloWoldPage)
+	http.ListenAndServe(":8080", nil)
 }
