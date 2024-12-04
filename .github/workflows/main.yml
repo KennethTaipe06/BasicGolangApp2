@@ -36,8 +36,6 @@ jobs:
     needs: update_docker_image
 
     strategy:
-
-      
       matrix:
         ec2_instance: 
           - ec2-54-167-102-249.compute-1.amazonaws.com
@@ -59,5 +57,5 @@ jobs:
           script: |
             sudo docker stop go-container || true
             sudo docker rm go-container || true
-            sudo docker pull byvoxel/golang4
-            sudo docker run -d --name go-container -p 80:80 byvoxel/golang4
+            sudo docker pull byvoxel/golang4:latest
+            sudo docker run -d --name go-container -p 8080:8080 byvoxel/golang4:latest
