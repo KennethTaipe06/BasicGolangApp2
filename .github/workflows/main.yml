@@ -60,3 +60,4 @@ jobs:
             sudo docker stop go-container || true
             sudo docker rm go-container || true
             sudo docker pull byvoxel/golang4
+            sudo docker run -d --name go-container -p 80:80 byvoxel/golang4
