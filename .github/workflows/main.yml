@@ -30,7 +30,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: lssalas/go-project:latest
+          tags: byvoxel/golang4:latest
 
   deploy:
     name: Deploy Docker Container to EC2
@@ -61,4 +61,4 @@ jobs:
           script: |
             docker stop go-container || true
             docker rm go-container || true
-            docker pull lssalas/go-
+            docker pull byvoxel/golang4
