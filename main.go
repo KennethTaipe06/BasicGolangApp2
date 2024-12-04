@@ -12,7 +12,7 @@ func helloWoldPage(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Could not get hostname", http.StatusInternalServerError)
         return
     }
-    fmt.Fprintf(w, "this is a test Hostname: %s", hostname)
+    fmt.Fprintf(w, "test 2 Hostname: %s", hostname)
 }
 
 func main() {
