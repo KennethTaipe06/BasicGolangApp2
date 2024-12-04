@@ -3,7 +3,7 @@ name: Main Deploy pull request
 on:
   push:
     branches:
-      - test
+      - QualityAssurance
 
 jobs:
   update_docker_image:
