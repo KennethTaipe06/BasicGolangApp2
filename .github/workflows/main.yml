@@ -1,1 +1,64 @@
+name: CI/CD for Docker Image Deployment
 
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.go" # Detecta cambios en cualquier archivo Go
+
+jobs:
+  update_docker_image:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2 # Agrega configuración de Buildx para mejor compatibilidad
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: lssalas/go-project:latest
+
+  deploy:
+    name: Deploy Docker Container to EC2
+    runs-on: ubuntu-latest
+    needs: update_docker_image
+
+    strategy:
+      matrix:
+        ec2_instance: 
+          - ec2-54-221-131-231.compute-1.amazonaws.com
+          - ec2-54-83-184-142.compute-1.amazonaws.com
+          - ec2-54-196-13-147.compute-1.amazonaws.com
+
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ matrix.ec2_instance }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            docker stop go-container || true
+            docker rm go-container || true
+            docker pull lssalas/go-

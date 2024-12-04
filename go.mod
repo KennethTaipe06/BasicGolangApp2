@@ -1,2 +1,3 @@
-module GoDocker
-go 1.22.0
+module your-module-name
+
+go 1.17
